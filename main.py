@@ -2,6 +2,7 @@ import sys
 import pandas as pd
 import numpy as np
 import KNN_classfier
+import K_means_clustering
 #ao executar colocar na linha de comando da seguinte maneira 'python3 main.py algoritmo  K treino teste'  
 
 algorithm = sys.argv[1]
@@ -30,5 +31,11 @@ if algorithm == 'KNN':
     classfier = KNN_classfier.KNN_classfier(K, train, test, train_classes, test_classes)
     classfier.test_fun()
 elif algorithm == 'K-means':
-    pass
+    clusters = K_means_clustering.K_means_cluster(K, train, train_classes, 100)
+    clusters.k_means()
+    cluster_test_dict = {}
+
+    for i, point in enumerate(test):
+        cluster_test_dict[i] = clusters.point_to_cluster(point)
     
+    print(cluster_test_dict)
