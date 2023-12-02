@@ -71,6 +71,22 @@ class K_means_cluster:
         return (dist_min[0][0])
 
     def update_centroids (self):
-
         for centroid in self.centroids:
             centroid.update_value()
+    
+    def count_proportions (self):
+        proportions = {}
+
+        for i, centroid in enumerate(self.centroids):
+            stayed = 0
+            quited = 0
+
+            for idx in centroid.points_idx:
+                if self.labels[idx] == 1:
+                    stayed += 1
+                else:
+                    quited += 1
+            
+            proportions [i] = (stayed / (stayed + quited), quited / (stayed + quited))
+        
+        return proportions

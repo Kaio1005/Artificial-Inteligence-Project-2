@@ -38,4 +38,10 @@ elif algorithm == 'K-means':
     for i, point in enumerate(test):
         cluster_test_dict[i] = clusters.point_to_cluster(point)
     
-    print(cluster_test_dict)
+    proportions = clusters.count_proportions()
+
+    for i in list(proportions.keys()):
+        print(f"In centroid {i}, we had {proportions[i][0]*100 :.2f}% of players that stayed in the league, and {proportions[i][1]*100 :.2f}% of players that quited.")
+
+
+    
