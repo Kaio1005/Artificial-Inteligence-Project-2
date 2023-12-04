@@ -3,6 +3,11 @@ import pandas as pd
 import numpy as np
 import KNN_classfier
 import K_means_clustering
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn import metrics
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+from sklearn.datasets import make_blobs
 #ao executar colocar na linha de comando da seguinte maneira 'python3 main.py algoritmo  K treino teste'  
 
 algorithm = sys.argv[1]
@@ -16,7 +21,7 @@ test = pd.read_csv(test)
 train_classes = pd.DataFrame()
 train_classes['TARGET_5Yrs'] = train['TARGET_5Yrs'].copy(deep = True)
 train_classes = train_classes.to_numpy()
-
+complete_train = train.copy(deep = True)
 train = train.drop('TARGET_5Yrs', axis = 1)
 train = train.to_numpy()
 
@@ -28,10 +33,30 @@ test = test.drop('TARGET_5Yrs', axis = 1)
 test = test.to_numpy()
 
 if algorithm == 'KNN':
+    print("Author implementation:")
     classfier = KNN_classfier.KNN_classfier(K, train, test, train_classes, test_classes)
     classfier.test_fun()
+
+    #Extra points comparation with sklearn implementation
+    print("sklearn implementation:")
+    train_classes = train_classes.ravel()
+    test_classes = test_classes.ravel()
+    model = KNeighborsClassifier(K)
+    model.fit(train, train_classes)
+    y_pred = model.predict(test)
+    conf = metrics.confusion_matrix(test_classes, y_pred)
+    print(conf)
+    accuracy = metrics.accuracy_score(test_classes, y_pred)
+    print(f"Accuracy is: {accuracy}")
+    precision = metrics.precision_score(test_classes, y_pred)
+    print(f"Precision is: {precision}")
+    recall = metrics.recall_score(test_classes, y_pred)
+    print(f"Recall is: {recall}")
+    F1 = metrics.f1_score(test_classes, y_pred)
+    print(f"F1 is: {F1}")
+
 elif algorithm == 'K-means':
-    clusters = K_means_clustering.K_means_cluster(K, train, train_classes, 100)
+    clusters = K_means_clustering.K_means_cluster(K, train, train_classes, 500)
     clusters.k_means()
     cluster_test_dict = {}
 
